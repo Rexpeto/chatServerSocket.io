@@ -11,10 +11,18 @@ const app = express();
 //* Creación de servidor http
 const server = http.createServer(app);
 
+//* Configuración de variables de entorno
+dotenv.config();
+
+//* SOCKET_EXTERNO
+const socket_externo = `${process.env.SOCKET_IP_CLIENT}:${process.env.SOCKET_PORT_CLIENT}`;
+
+console.log(socket_externo);
+
 //* Nueva instancia de servidor socket.io
 const socket = new SocketServer(server, {
     cors: {
-        origin: ["http://localhost:5173", "http://192.168.15.171:5173"],
+        origin: ["http://localhost:5173", socket_externo],
     },
 });
 
@@ -23,9 +31,6 @@ app.use(cors());
 
 //* Uso de morgan en el server (Muestra mensajes de petición)
 app.use(morgan("dev"));
-
-//* Configuración de variables de entorno
-dotenv.config();
 
 //* Puerto del server, sino hay puerto en .env coloca el puerto 5000
 const port = process.env.PORT ?? "5000";
